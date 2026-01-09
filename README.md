@@ -10,11 +10,9 @@ The goal of this system is to recommend relevant news articles to users based on
 
 The core model, located in `model/NAMLxLSTUR`, features:
 
-- **News Encoder**: Uses DistilBERT to encode news titles and abstracts, combined with category and subcategory embeddings.
-- **User Encoder**: Captures user interests using:
-  - **Long-term interest**: Learned from the entire history of clicked news.
-  - **Short-term interest**: Learned from recent clicks using GRU (Gated Recurrent Unit).
-- **Click Predictor**: Calculates the probability of a user clicking a candidate news article.
+- **News Encoder (NAML)**: Utilizes a multi-view learning approach to create comprehensive news representations. It employs attention mechanisms to process title, abstract, category, and subcategory features, while integrating DistilBERT for enhanced semantic understanding.
+- **User Encoder (LSTUR)**: Models user preferences by combining long-term representations (learned via user embeddings) with short-term interests derived from clicked news history, using LSTM-based sequential modeling.
+- **Click Predictor**: A deep neural network that predicts the probability of a click by synthesizing the learned news and user representations.
 
 ## Project Structure
 
