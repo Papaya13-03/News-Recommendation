@@ -6,9 +6,9 @@ This project implements a News Recommendation System using the **Co-NAML-LSTUR**
 
 The goal of this system is to recommend relevant news articles to users based on their reading history. It uses a hybrid approach to model both long-term and short-term user preferences, and employs attention mechanisms to learn informative representations of news articles from multiple views (category, subcategory, title, abstract).
 
-### Key Model: Co_NAML_LSTUR
+### Key Model: NAMLxLSTUR
 
-The core model, located in `model/Co_NAML_LSTUR`, features:
+The core model, located in `model/NAMLxLSTUR`, features:
 
 - **News Encoder**: Uses DistilBERT to encode news titles and abstracts, combined with category and subcategory embeddings.
 - **User Encoder**: Captures user interests using:
@@ -27,7 +27,7 @@ The core model, located in `model/Co_NAML_LSTUR`, features:
 ├── evaluate.py               # Evaluation metrics (AUC, MRR, nDCG)
 ├── data_preprocess.py        # Data preprocessing utilities
 ├── model/                    # Model definitions
-│   └── Co_NAML_LSTUR/        # The specific model implementation
+│   └── NAMLxLSTUR/        # The specific model implementation
 ├── checkpoint/               # Directory where model checkpoints are saved
 ├── data/                     # Directory for datasets (train, val, test)
 ├── runs/                     # TensorBoard logs
@@ -105,7 +105,7 @@ python inference.py --batch_file sample_batch_inference.json
 
 The `model` directory contains the implementation of the neural networks.
 
-- `model/Co_NAML_LSTUR`: Contains the source code for the combined NAML and LSTUR model.
+- `model/NAMLxLSTUR`: Contains the source code for the combined NAML and LSTUR model.
   - This directory typically includes the sub-modules for news encoding (text processing with DistilBERT) and user representation learning.
 
 ## Data Format
