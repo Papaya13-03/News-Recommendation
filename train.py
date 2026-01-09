@@ -151,7 +151,7 @@ def train():
             minibatch = next(dataloader)
 
         step += 1
-        # Co_NAML_LSTUR specific forward pass
+        # NAMLxLSTUR specific forward pass
         y_pred = model(
             minibatch["user"],
             minibatch["clicked_news_length"],

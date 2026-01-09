@@ -83,12 +83,12 @@ def check_data_structure():
 def check_model_config():
     """Check if model configurations are accessible"""
     try:
-        from config import Co_NAML_LSTURConfig
+        from config import NAMLxLSTURConfig
         print("✅ Model configurations - OK")
         
         # Test config instantiation
-        config = Co_NAML_LSTURConfig()
-        print(f"✅ Co_NAML_LSTUR config - batch_size: {config.batch_size}")
+        config = NAMLxLSTURConfig()
+        print(f"✅ NAMLxLSTUR config - batch_size: {config.batch_size}")
         
         return True
     except Exception as e:
@@ -148,8 +148,8 @@ def main():
         print("🎉 All checks passed! Environment is ready.")
         print("\nNext steps:")
         print("1. Prepare your data: python data_preprocess.py")
-        print("2. Train the model: python train.py --model_name Co_NAML_LSTUR")
-        print("3. Run inference: python inference.py --model_name Co_NAML_LSTUR")
+        print("2. Train the model: python train.py --model_name NAMLxLSTUR")
+        print("3. Run inference: python inference.py --model_name NAMLxLSTUR")
     else:
         print("⚠️  Some checks failed. Please fix the issues above.")
         

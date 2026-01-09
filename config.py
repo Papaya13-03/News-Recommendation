@@ -1,10 +1,10 @@
 import os
 import torch
 
-model_name = os.environ["MODEL_NAME"] if "MODEL_NAME" in os.environ else "Co_NAML_LSTUR"
+model_name = os.environ["MODEL_NAME"] if "MODEL_NAME" in os.environ else "NAMLxLSTUR"
 # Currently included model
 assert model_name in [
-    "Co_NAML_LSTUR",  # Added for the research paper model
+    "NAMLxLSTUR",  # Added for the research paper model
 ]
 
 
@@ -39,12 +39,12 @@ class BaseConfig:
     entity_embedding_dim = 100
     # For additive attention
     # query_vector_dim = 100
-    # ---For Co_NAML_LSTUR---
+    # ---For NAMLxLSTUR---
     query_vector_dim = 200
-    # ---For Co_NAML_LSTUR---
+    # ---For NAMLxLSTUR---
 
 
-class Co_NAML_LSTURConfig(BaseConfig):
+class NAMLxLSTURConfig(BaseConfig):
     """
     Configuration for Co-NAML-LSTUR: Combined model with NAML and LSTUR
     Official implementation matching the research paper results

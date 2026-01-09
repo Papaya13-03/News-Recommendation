@@ -79,7 +79,7 @@ class NewsInferenceDataset(Dataset):
 class NewsRecommendationInference:
     """Main inference class for news recommendation."""
     
-    def __init__(self, model_name="Co_NAML_LSTUR", checkpoint_path=None):
+    def __init__(self, model_name="NAMLxLSTUR", checkpoint_path=None):
         self.model_name = model_name
         self.device = device
         
@@ -255,7 +255,7 @@ class NewsRecommendationInference:
 
 def parse_args():
     parser = argparse.ArgumentParser(description="News recommendation inference")
-    parser.add_argument("--model_name", type=str, default="Co_NAML_LSTUR",
+    parser.add_argument("--model_name", type=str, default="NAMLxLSTUR",
                        help="Name of the model")
     parser.add_argument("--checkpoint_path", type=str, default=None,
                        help="Path to model checkpoint")

@@ -123,8 +123,8 @@ class UserDataset(Dataset):
                 self.behaviors.at[row.Index, "user"] = 0
         
         # Original: if model_name in ["NAML", "LSTUR"]: ...
-        # Removed as we only support Co_NAML_LSTUR which uses user embeddings
-        if model_name == "Co_NAML_LSTUR":
+        # Removed as we only support NAMLxLSTUR which uses user embeddings
+        if model_name == "NAMLxLSTUR":
             print(f"User miss rate: {user_missed / user_total:.4f}")
 
     def __len__(self):
@@ -240,7 +240,7 @@ def evaluate(model, directory, num_workers, max_count=sys.maxsize):
                 dim=0,
             ).transpose(0, 1)
             
-            # Simplified logic for Co_NAML_LSTUR
+            # Simplified logic for NAMLxLSTUR
             user_vector = model.get_user_vector(
                 minibatch["user"],
                 minibatch["clicked_news_length"],

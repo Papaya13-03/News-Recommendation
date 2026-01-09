@@ -3,8 +3,8 @@ import json
 
 def main():
     # Initialize the inference system
-    print("Initializing Co_NAML_LSTUR inference system...")
-    inferencer = NewsRecommendationInference(model_name="Co_NAML_LSTUR")
+    print("Initializing NAMLxLSTUR inference system...")
+    inferencer = NewsRecommendationInference(model_name="NAMLxLSTUR")
 
     # Load news data and precompute vectors
     print("Loading news data...")

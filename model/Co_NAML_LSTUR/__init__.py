@@ -3,10 +3,10 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 
-from model.Co_NAML_LSTUR.NAML.news_encoder import NewsEncoder
-from model.Co_NAML_LSTUR.LSTUR.user_encoder import UserEncoder
-from model.Co_NAML_LSTUR.click_predictor.DNN import DNNClickPredictor
-from model.Co_NAML_LSTUR.DKN.attention import Attention
+from model.NAMLxLSTUR.NAML.news_encoder import NewsEncoder
+from model.NAMLxLSTUR.LSTUR.user_encoder import UserEncoder
+from model.NAMLxLSTUR.click_predictor.DNN import DNNClickPredictor
+from model.NAMLxLSTUR.DKN.attention import Attention
 # from model.general.click_predictor.dot_product import DotProductClickPredictor
 
 # Updated device selection to prefer MPS on Mac
@@ -18,14 +18,14 @@ else:
     device = torch.device("cpu")
 
 
-class Co_NAML_LSTUR(torch.nn.Module):
+class NAMLxLSTUR(torch.nn.Module):
     """
-    Co_NAML_LSTUR network.
+    NAMLxLSTUR network.
     Input 1 + K candidate news and a list of user clicked news, produce the click probability.
     """
 
     def __init__(self, config, pretrained_word_embedding=None):
-        super(Co_NAML_LSTUR, self).__init__()
+        super(NAMLxLSTUR, self).__init__()
         self.config = config
         self.news_encoder = NewsEncoder(config, pretrained_word_embedding)
         self.user_encoder = UserEncoder(config)
