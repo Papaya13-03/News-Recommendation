@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from model.general.attention.additive import AdditiveAttention
+from model.NAMLxLSTUR.attention.additive import AdditiveAttention
 from transformers import DistilBertModel, DistilBertTokenizer
 
 # Updated device selection to prefer MPS on Mac
