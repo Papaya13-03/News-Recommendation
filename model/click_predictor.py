@@ -2,7 +2,6 @@ import torch
 import torch.nn as nn
 from math import sqrt
 
-
 class DNNClickPredictor(torch.nn.Module):
     def __init__(self, input_size, hidden_size=None):
         super(DNNClickPredictor, self).__init__()

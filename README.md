@@ -8,7 +8,7 @@ The goal of this system is to recommend relevant news articles to users based on
 
 ### Key Model: NAMLxLSTUR
 
-The core model, located in `model/NAMLxLSTUR`, features:
+The core model, now located in `model.py`, features:
 
 - **News Encoder (NAML)**: Utilizes a multi-view learning approach to create comprehensive news representations. It employs attention mechanisms to process title, abstract, category, and subcategory features, while integrating DistilBERT for enhanced semantic understanding.
 - **User Encoder (LSTUR)**: Models user preferences by combining long-term representations (learned via user embeddings) with short-term interests derived from clicked news history, using LSTM-based sequential modeling.
@@ -18,18 +18,13 @@ The core model, located in `model/NAMLxLSTUR`, features:
 
 ```
 .
-├── config.py                 # Configuration parameters for training and model
-├── dataset.py                # Dataset loading and processing logic
-├── train.py                  # Script for training the model
-├── inference.py              # Script for running inference (predictions)
-├── evaluate.py               # Evaluation metrics (AUC, MRR, nDCG)
-├── data_preprocess.py        # Data preprocessing utilities
-├── model/                    # Model definitions
-│   └── NAMLxLSTUR/        # The specific model implementation
+├── main.py                   # Single entry point for training, inference, and evaluation
+├── model.py                  # Consolidated model architecture
+├── README.md                 # Project documentation
+├── requirements.txt          # Python dependencies
 ├── checkpoint/               # Directory where model checkpoints are saved
 ├── data/                     # Directory for datasets (train, val, test)
-├── runs/                     # TensorBoard logs
-└── requirements.txt          # Python dependencies
+└── runs/                     # TensorBoard logs
 ```
 
 ## Installation
@@ -41,44 +36,33 @@ The core model, located in `model/NAMLxLSTUR`, features:
     pip install -r requirements.txt
     ```
 
-## Configuration
-
-The model and training parameters are defined in `config.py`. Key parameters include:
-
-- `batch_size`: Batch size for training.
-- `learning_rate`: Learning rate for the optimizer.
-- `num_epochs`: Number of training epochs.
-- `dataset_attributes`: Fields used for news representation (category, title, etc.).
-
-You can also override some configuration using environment variables or command-line arguments during training/inference.
-
 ## Usage
+
+The project now uses a single entry point `main.py` for all operations.
 
 ### Training
 
-To train the model, run the `train.py` script:
+To train the model:
 
 ```bash
-python train.py
+python main.py train
 ```
 
-Arguments:
+**Arguments:**
 
-- `--model_name`: Name of the model to train (default: "NAMLxLSTUR").
 - `--batch_size`: Override batch size.
+- `--learning_rate`: Override learning rate.
 - `--num_epochs`: Override number of epochs.
 - `--device`: Specify device (e.g., "cuda:0", "cpu", "mps").
 
 ### Inference
 
-You can run inference to get news recommendations for users using `inference.py`.
+To run inference (generate recommendations):
 
 **1. Single User Prediction**
 
-Predict probabilities for a specific list of candidate news for a user:
-
 ```bash
-python inference.py --user_id 1 \
+python main.py inference --user_id 1 \
   --clicked_news N37378 N14827 \
   --candidate_news N50398 N48265 \
   --top_k 5
@@ -86,31 +70,24 @@ python inference.py --user_id 1 \
 
 **2. Batch Prediction**
 
-Run predictions for multiple users defined in a JSON file:
-
 ```bash
-python inference.py --batch_file sample_batch_inference.json
+python main.py inference --batch_file sample_batch_inference.json
 ```
 
 **Arguments:**
 
-- `--model_name`: Name of the model (default: "NAMLxLSTUR").
 - `--checkpoint_path`: Path to a specific checkpoint (optional, defaults to latest).
 - `--news_data`: Path to parsed news data (default: "./data/test/news_parsed.tsv").
 - `--batch_file`: Path to JSON file for batch processing.
 
 ## Model Details
 
-The `model` directory contains the implementation of the neural networks.
-
-- `model/NAMLxLSTUR`: Contains the source code for the combined NAML and LSTUR model.
-  - This directory typically includes the sub-modules for news encoding (text processing with DistilBERT) and user representation learning.
+The `model.py` file contains the complete implementation of the NAMLxLSTUR model architecture, including News Encoder, User Encoder, Attention mechanisms, and Click Predictor.
 
 ## Data Format
 
-The system expects data in TSV format (parsed):
+The system expects data in TSV format (parsed) in `data/` directory.
 
-- **Behaviors**: `impression_id`, `user_id`, `time`, `history`, `impressions`
-- **News**: `news_id`, `category`, `subcategory`, `title`, `abstract`, etc.
-
-See `dataset.py` for details on how data is loaded.
+- `data/train/behaviors_parsed.tsv`
+- `data/train/news_parsed.tsv`
+- `data/test/news_parsed.tsv` (for inference)

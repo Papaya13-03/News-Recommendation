@@ -1,22 +1,11 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-
-
-from model.NAMLxLSTUR.NAML.news_encoder import NewsEncoder
-from model.NAMLxLSTUR.LSTUR.user_encoder import UserEncoder
-from model.NAMLxLSTUR.click_predictor.DNN import DNNClickPredictor
-from model.NAMLxLSTUR.DKN.attention import Attention
-# from model.general.click_predictor.dot_product import DotProductClickPredictor
-
-# Updated device selection to prefer MPS on Mac
-if torch.backends.mps.is_available():
-    device = torch.device("mps")
-elif torch.cuda.is_available():
-    device = torch.device("cuda:0")
-else:
-    device = torch.device("cpu")
-
+from config import device
+from .news_encoder import NewsEncoder
+from .user_encoder import UserEncoder
+from .click_predictor import DNNClickPredictor
+from .attention import Attention
 
 class NAMLxLSTUR(torch.nn.Module):
     """
@@ -30,7 +19,6 @@ class NAMLxLSTUR(torch.nn.Module):
         self.news_encoder = NewsEncoder(config, pretrained_word_embedding)
         self.user_encoder = UserEncoder(config)
 
-        # self.click_predictor = DotProductClickPredictor()
         self.click_predictor = DNNClickPredictor(
             input_size=self.config.num_filters
             + self.config.num_filters,  # news vector dim + user vector dim
@@ -47,24 +35,8 @@ class NAMLxLSTUR(torch.nn.Module):
     def forward(self, user, clicked_news_length, candidate_news, clicked_news):
         """
         Args:
-            candidate_news:
-                [
-                    {
-                        "category": batch_size,
-                        "subcategory": batch_size,
-                        "title": batch_size * num_words_title,
-                        "abstract": batch_size * num_words_abstract
-                    } * (1 + K)
-                ]
-            clicked_news:
-                [
-                    {
-                        "category": batch_size,
-                        "subcategory": batch_size,
-                        "title": batch_size * num_words_title,
-                        "abstract": batch_size * num_words_abstract
-                    } * num_clicked_news_a_user
-                ]
+            candidate_news: [ { ... } * (1 + K) ]
+            clicked_news: [ { ... } * num_clicked_news_a_user ]
         Returns:
             click_probability: batch_size
         """
@@ -79,7 +51,6 @@ class NAMLxLSTUR(torch.nn.Module):
 
         # LSTUR
         # con: batch_size, num_filters * 1.5
-        # TODO what if not drop
         user = F.dropout1d(
             self.user_embedding(user.to(device)).unsqueeze(dim=0),
             p=self.config.masking_probability,
@@ -88,7 +59,6 @@ class NAMLxLSTUR(torch.nn.Module):
 
         # batch_size, num_filters
         user_vector = self.user_encoder(user, clicked_news_length, clicked_news_vector)
-        # batch_size, 1 + K
 
         # Get actual dimensions from the tensors
         batch_size, num_candidates, news_vector_dim = candidate_news_vector.size()
@@ -107,13 +77,7 @@ class NAMLxLSTUR(torch.nn.Module):
     def get_news_vector(self, news):
         """
         Args:
-            news:
-                {
-                    "category": batch_size,
-                    "subcategory": batch_size,
-                    "title": batch_size * num_words_title,
-                    "abstract": batch_size * num_words_abstract
-                }
+            news: { ... }
         Returns:
             (shape) batch_size, num_filters
         """
@@ -129,7 +93,6 @@ class NAMLxLSTUR(torch.nn.Module):
         Returns:
             (shape) batch_size, num_filters * 3
         """
-
         user = self.user_embedding(user.to(device))
         # batch_size, num_filters * 3
         return self.user_encoder(user, clicked_news_length, clicked_news_vector)

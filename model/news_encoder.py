@@ -1,17 +1,11 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from model.NAMLxLSTUR.attention.additive import AdditiveAttention
 from transformers import DistilBertModel, DistilBertTokenizer
-
-# Updated device selection to prefer MPS on Mac
-if torch.backends.mps.is_available():
-    device = torch.device("mps")
-elif torch.cuda.is_available():
-    device = torch.device("cuda:0")
-else:
-    device = torch.device("cpu")
-
+import os
+import json
+from .attention import AdditiveAttention
+from config import device
 
 class TextEncoder(torch.nn.Module):
     def __init__(
@@ -107,9 +101,6 @@ class DistilBertTextEncoder(torch.nn.Module):
         In a production system, this would load from your actual vocab file.
         """
         try:
-            import os
-            import json
-
             # Look for a vocabulary file in various locations
             vocab_file_paths = [
                 "data/train/word_dict.json",
@@ -250,9 +241,6 @@ class DistilBertElementEncoder(torch.nn.Module):
         Load the category/subcategory mapping from ID to name.
         """
         try:
-            import os
-            import json
-
             # Possible file paths
             element_file_paths = [
                 f"data/train/{self.element_type}_dict.json",
@@ -431,10 +419,12 @@ class NewsEncoder(torch.nn.Module):
         text_vectors = [
             encoder(news[name].to(device))
             for name, encoder in self.text_encoders.items()
+            if name in news
         ]
         element_vectors = [
             encoder(news[name].to(device))
             for name, encoder in self.element_encoders.items()
+            if name in news
         ]
 
         all_vectors = text_vectors + element_vectors
